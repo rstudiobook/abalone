@@ -1,0 +1,36 @@
+Estimating Abalone density
+==========================
+By me, myself, and I. (`r as.character(Sys.Date())`)
+
+Introduction
+------------
+If we can estimate the density of _abalones_, we never have to weight them again!
+
+Theory
+------
+To estimate the density of _abalones_, we make the model assumption that they are rectangular boxes with their volume $V$ given as the product of length, width, and height:
+$$V = l\times w\times h.$$
+The density $\rho$ is estimated as from the linear model
+$$
+m = \rho V,
+$$
+where $m$ is the measured weight of the abalone.
+
+Data and calculations
+---------------------
+```{r,echo=FALSE, cache=TRUE}
+dat <- read.csv("../data/abalone.csv")
+dat$V <- dat$Length * dat$Diameter * dat$Height * (20^3)
+dat$Whole.weight <- dat$Whole.weight * 200
+model <- lm(Whole.weight ~ V - 1,data=dat)
+```
+We use the abalone that can be found at the [the UCI machine learning laboratory](http://archive.ics.uci.edu/ml/datasets/Abalone). This data set contains information on `r nrow(dat)` _abalones_, including length, diameter, and height. The estimated density is `r coefficients(model)` grams per cubic cm with an R-squared value of `r summary(model)$r.squared`.
+
+Conclusion
+----------
+This may not be a realistic density, but the fit is pretty good.
+
+
+
+
+
