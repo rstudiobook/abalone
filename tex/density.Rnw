@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{hyperref}
+\title{Estimating Abalone density}
+\author{Me, myself, and I}
+\date{\today}
+
+\begin{document}
+\SweaveOpts{concordance=TRUE}
+\maketitle
+
+\section{Introduction}
+If we can estimate the density of \emph{abalones}, we never have to weight them again!
+
+\section{Theory}
+To estimate the density of \emph{abalones}, we make the model assumption that they are rectangular boxes with their volume $V$ given as the product of length, width, and height:
+%
+\begin{equation}
+V = l\times w\times h.
+\end{equation}
+%
+The density $\rho$ is estimated as from the linear model
+\begin{equation}
+m = \rho V,
+\end{equation}
+where $m$ is the measured weight of the abalone.
+
+\section{Data and calculations}
+<<echo=FALSE, cache=TRUE>>=
+dat <- read.csv("../data/abalone.csv")
+dat$V <- dat$Length * dat$Diameter * dat$Height * (20^3)
+dat$Whole.weight <- dat$Whole.weight * 200
+model <- lm(Whole.weight ~ V - 1,data=dat)
+@
+We use the abalone data set that can be found at \url{http://archive.ics.uci.edu/ml/datasets/Abalone}. This data set contains information on \Sexpr{nrow(dat)} \emph{abalones}, including length, diameter, and height. The estimated density is \Sexpr{coefficients(model)} $\textrm{g}\cdot\textrm{cm}^{-3}$ with an R-squared value of \Sexpr{summary(model)$r.squared}.
+
+\section{Conclusion}
+This may not be a realistic density, but the fit is pretty good.
+
+
+
+
+
+
+
+
+
+
+\end{document}
